@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: warehouse-deployment
+  namespace: market
+  labels:
+    app: warehouse
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: warehouse
+  template:
+    metadata:
+      labels:
+        app: warehouse
+    spec:
+      containers:
+        - name: warehouse
+          image: 2admi/otus-market-saga-warehouse:1.0.0
+          ports:
+            - containerPort: 8882
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: "kafka:9092"
+            - name: DB_HOST
+              value: "postgres-warehouse"
+            - name: DB_PORT
+              value: "5434"
+            - name: DB_NAME
+              value: "warehouse_db"
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: DB_USERNAME
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: DB_PASSWORD

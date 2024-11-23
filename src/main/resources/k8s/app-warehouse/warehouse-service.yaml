@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: warehouse-svc
+  namespace: market
+  labels:
+    app: warehouse
+spec:
+  selector:
+    app: warehouse
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8882
+  type: ClusterIP

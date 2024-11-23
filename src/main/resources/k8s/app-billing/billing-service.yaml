@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: billing-svc
+  namespace: market
+  labels:
+    app: billing
+spec:
+  selector:
+    app: billing
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8881
+  type: ClusterIP

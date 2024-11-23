@@ -1,0 +1,824 @@
+{
+	"info": {
+		"_postman_id": "9ed28324-847e-410f-b399-5fcae4d3ccb0",
+		"name": "Otus Market Saga Testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12899390"
+	},
+	"item": [
+		{
+			"name": "Create Billing Account",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let requestBody = pm.request.body.raw;\r",
+							"let parsedBody = JSON.parse(requestBody);\r",
+							"pm.environment.set(\"accountNumber\", parsedBody.accountNumber);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Статус ответа - 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"accountNumber\": \"1234567812345678\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/billing/",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"billing",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Deposit Funds",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Статус ответа - 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"var jsonData = pm.response.json();\r",
+							"pm.environment.set(\"initialBalance\", jsonData.balance);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"accountNumber\": \"{{accountNumber}}\",\r\n    \"amount\": 1000.0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/billing/deposit",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"billing",
+						"deposit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add First Item to Warehouse",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let requestBody = pm.request.body.raw;\r",
+							"let parsedBody = JSON.parse(requestBody);\r",
+							"pm.environment.set(\"item1name\", parsedBody.name);\r",
+							"pm.environment.set(\"item1quantity\", parsedBody.quantity);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Статус ответа - 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Keyboard Logitech K120\",\r\n    \"quantity\": \"10\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/warehouse",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"warehouse"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Second Item to Warehouse Copy",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let requestBody = pm.request.body.raw;\r",
+							"let parsedBody = JSON.parse(requestBody);\r",
+							"pm.environment.set(\"item2name\", parsedBody.name);\r",
+							"pm.environment.set(\"item2quantity\", parsedBody.quantity);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Статус ответа - 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Laptop Apple MacBook Pro\",\r\n    \"quantity\": \"10\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/warehouse",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"warehouse"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test Case 1. Create Order in status READY_TO_DELIVER",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Статус ответа - 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"var jsonData = pm.response.json();\r",
+							"pm.environment.set(\"test1OrderId\", jsonData.id);\r",
+							"pm.environment.set(\"test1OrderTotalPrice\", jsonData.totalPrice);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"items\": [\r\n        {\r\n            \"name\": \"{{item1name}}\",\r\n            \"price\": \"100.0\",\r\n            \"quantity\": 1\r\n        }\r\n    ],\r\n    \"accountNumber\": \"{{accountNumber}}\",\r\n    \"deliveryAddress\": \"г. Москва, ул. Академика Королева, д.12\",\r\n    \"deliveryDate\": \"2030-01-01\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/orders",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test Case 1. Get Order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Статус ответа - 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"var jsonData = pm.response.json();\r",
+							"pm.test(\"Статус заказа №1 - READY_TO_DELIVER (пройдены все шаги, включая необязательную регистрацию доставки)\", function () {\r",
+							"    pm.expect(jsonData.status).to.eql(\"READY_TO_DELIVER\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/orders/{{test1OrderId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"orders",
+						"{{test1OrderId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test Case 1. Get Account",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Статус ответа - 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"var jsonData = pm.response.json();\r",
+							"var balance = Number(pm.environment.get(\"initialBalance\"));\r",
+							"var orderPrice = Number(pm.environment.get(\"test1OrderTotalPrice\"));\r",
+							"var expectedBalance = balance - orderPrice;\r",
+							"pm.test(\"Средства за заказ списаны\", function () {\r",
+							"    pm.expect(expectedBalance).to.eql(jsonData.balance);\r",
+							"});\r",
+							"\r",
+							"pm.environment.set(\"initialBalance\", jsonData.balance);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/billing/{{accountNumber}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"billing",
+						"{{accountNumber}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test Case 1. Get Item from Warehouse",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Статус ответа - 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"var jsonData = pm.response.json();\r",
+							"var quantity = Number(pm.environment.get(\"item1quantity\"));\r",
+							"var expectedQuantity = quantity - 1;\r",
+							"pm.test(\"Товар списан со склада\", function () {\r",
+							"    pm.expect(expectedQuantity).to.eql(jsonData.quantity);\r",
+							"});\r",
+							"\r",
+							"pm.environment.set(\"item1quantity\", jsonData.quantity);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/warehouse/item?name={{item1name}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"warehouse",
+						"item"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "{{item1name}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test Case 2. Create Order in status PENDING_DELIVERY",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Статус ответа - 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"var jsonData = pm.response.json();\r",
+							"pm.environment.set(\"test2OrderId\", jsonData.id);\r",
+							"pm.environment.set(\"test2OrderTotalPrice\", jsonData.totalPrice);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"items\": [\r\n        {\r\n            \"name\": \"{{item1name}}\",\r\n            \"price\": \"100.0\",\r\n            \"quantity\": 1\r\n        }\r\n    ],\r\n    \"accountNumber\": \"{{accountNumber}}\",\r\n    \"deliveryAddress\": \"г. Москва, ул. Академика Королева, д.12\",\r\n    \"deliveryDate\": \"2020-01-01\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/orders",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test Case 2. Get Order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Статус ответа - 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"var jsonData = pm.response.json();\r",
+							"pm.test(\"Статус заказа №1 - PENDING_DELIVERY (пройдены все шаги, КРОМЕ необязательной регистрации доставки)\", function () {\r",
+							"    pm.expect(jsonData.status).to.eql(\"PENDING_DELIVERY\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/orders/{{test2OrderId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"orders",
+						"{{test2OrderId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test Case 2. Get Account",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Статус ответа - 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"var jsonData = pm.response.json();\r",
+							"var balance = Number(pm.environment.get(\"initialBalance\"));\r",
+							"var orderPrice = Number(pm.environment.get(\"test1OrderTotalPrice\"));\r",
+							"var expectedBalance = balance - orderPrice;\r",
+							"pm.test(\"Средства за заказ списаны\", function () {\r",
+							"    pm.expect(expectedBalance).to.eql(jsonData.balance);\r",
+							"});\r",
+							"\r",
+							"pm.environment.set(\"initialBalance\", jsonData.balance);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/billing/{{accountNumber}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"billing",
+						"{{accountNumber}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test Case 2. Get Item from Warehouse",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Статус ответа - 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"var jsonData = pm.response.json();\r",
+							"var quantity = Number(pm.environment.get(\"item1quantity\"));\r",
+							"var expectedQuantity = quantity - 1;\r",
+							"pm.test(\"Товар списан со склада\", function () {\r",
+							"    pm.expect(expectedQuantity).to.eql(jsonData.quantity);\r",
+							"});\r",
+							"\r",
+							"pm.environment.set(\"item1quantity\", jsonData.quantity);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/warehouse/item?name={{item1name}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"warehouse",
+						"item"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "{{item1name}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test Case 3. Create Order in status CANCELLED_BY_BILLING",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Статус ответа - 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"var jsonData = pm.response.json();\r",
+							"pm.environment.set(\"test3OrderId\", jsonData.id);\r",
+							"pm.environment.set(\"test3OrderTotalPrice\", jsonData.totalPrice);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"items\": [\r\n        {\r\n            \"name\": \"{{item2name}}\",\r\n            \"price\": \"100000.0\",\r\n            \"quantity\": 1\r\n        }\r\n    ],\r\n    \"accountNumber\": \"{{accountNumber}}\",\r\n    \"deliveryAddress\": \"г. Москва, ул. Академика Королева, д.12\",\r\n    \"deliveryDate\": \"2020-01-01\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/orders",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test Case 3. Get Order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Статус ответа - 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"var jsonData = pm.response.json();\r",
+							"pm.test(\"Статус заказа №1 - CANCELLED_BY_BILLING (не пройден шаг списания средств со счета)\", function () {\r",
+							"    pm.expect(jsonData.status).to.eql(\"CANCELLED_BY_BILLING\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/orders/{{test3OrderId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"orders",
+						"{{test3OrderId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test Case 3. Get Account",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Статус ответа - 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"var jsonData = pm.response.json();\r",
+							"var balance = Number(pm.environment.get(\"initialBalance\"));\r",
+							"pm.test(\"Средства за заказ НЕ списаны\", function () {\r",
+							"    pm.expect(balance).to.eql(jsonData.balance);\r",
+							"});\r",
+							"\r",
+							"pm.environment.set(\"initialBalance\", jsonData.balance);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/billing/{{accountNumber}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"billing",
+						"{{accountNumber}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test Case 3. Get Item from Warehouse",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Статус ответа - 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"var jsonData = pm.response.json();\r",
+							"var quantity = Number(pm.environment.get(\"item2quantity\"));\r",
+							"pm.test(\"Товар НЕ списан со склада\", function () {\r",
+							"    pm.expect(quantity).to.eql(jsonData.quantity);\r",
+							"});\r",
+							"\r",
+							"pm.environment.set(\"item1quantity\", jsonData.quantity);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/warehouse/item?name={{item2name}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"warehouse",
+						"item"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "{{item2name}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test Case 4. Create Order in status CANCELLED_BY_WAREHOUSE",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Статус ответа - 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"var jsonData = pm.response.json();\r",
+							"pm.environment.set(\"test4OrderId\", jsonData.id);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"items\": [\r\n        {\r\n            \"name\": \"PC Mouse Razer Naga Hex\",\r\n            \"price\": \"100.0\",\r\n            \"quantity\": 1\r\n        }\r\n    ],\r\n    \"accountNumber\": \"{{accountNumber}}\",\r\n    \"deliveryAddress\": \"г. Москва, ул. Академика Королева, д.12\",\r\n    \"deliveryDate\": \"2020-01-01\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/orders",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test Case 4. Get Order Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Статус ответа - 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"var jsonData = pm.response.json();\r",
+							"pm.test(\"Статус заказа №1 - CANCELLED_BY_WAREHOUSE (не пройден шаг списания товара со склада)\", function () {\r",
+							"    pm.expect(jsonData.status).to.eql(\"CANCELLED_BY_WAREHOUSE\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/orders/{{test4OrderId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"orders",
+						"{{test4OrderId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test Case 4. Get Account",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Статус ответа - 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"var jsonData = pm.response.json();\r",
+							"var balance = Number(pm.environment.get(\"initialBalance\"));\r",
+							"pm.test(\"Средства за заказ НЕ списаны\", function () {\r",
+							"    pm.expect(balance).to.eql(jsonData.balance);\r",
+							"});\r",
+							"\r",
+							"pm.environment.set(\"initialBalance\", jsonData.balance);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/billing/{{accountNumber}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"billing",
+						"{{accountNumber}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
