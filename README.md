@@ -23,6 +23,6 @@ kubectl apply -f market-ingress.yaml
 3. Выполнить команду
 ```bash
 cd ..\..\static\postman
-newman run Saga.postman_collection.json --environment saga.postman_environment.json --reporters htmlextra  --reporter-htmlextra-export report.html  --delay-request 100  --reporter-html-showPostmanCollection --reporter-htmlextra-logs
+newman run OtusMarketIdempotencyTesting.postman_collection.json --environment IdempotencyTesting.postman_environment.json --reporters htmlextra  --reporter-htmlextra-export report.html  --delay-request 100  --reporter-html-showPostmanCollection --reporter-htmlextra-logs
 ```
 4. Откройте файл report.html и убедитесь в корректности выполненных запросов.
