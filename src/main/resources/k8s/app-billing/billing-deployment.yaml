@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: billing
-          image: 2admi/otus-market-saga-billing:1.1.0
+          image: 2admi/otus-market-saga-billing:1.2.0
           ports:
             - containerPort: 8881
           env:
